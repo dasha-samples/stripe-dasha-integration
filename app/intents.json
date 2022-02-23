@@ -1,0 +1,393 @@
+{
+  "version": "v2",
+  "intents": {
+    "yes": {
+      "includes": [
+        "yes",
+        "correct",
+        "sure",
+        "absolutely",
+        "yes siree bob",
+        "right",
+        "yep",
+        "you got it",
+        "I would",
+        "yeah",
+        "that's right",
+        "I would",
+        "I do",
+        "you can",
+        "you may"
+      ]
+    },
+    "no": {
+      "includes": [
+        "no",
+        "definitely not",
+        "wrong",
+        "incorrect",
+        "I do not",
+        "I don't",
+        "I would not",
+        "I wouldn't",
+        "no, not right",
+        "not right",
+        "nope",
+        "there is mistake",
+        "thats wrong",
+        "negative"
+      ],
+      "excludes": ["no, I want a delivery", "no, I want it delivered"]
+    },
+
+    "bye": {
+      "includes": [
+        "bye",
+        "good bye",
+        "thanks bye",
+        "nevermind",
+        "forget about it",
+        "we're done",
+        "take it easy",
+        "peace out boo",
+        "peace"
+      ]
+    },
+
+    "payment_phone": {
+      "includes": [
+        "I wanted to pay for a jacket and I can't do it online on the website",
+        "pay for a jacket and I can't do it online on the website"
+      ]
+    },
+
+    "item_number": {
+      "includes": [
+        "the item number is 122334",
+        "item number is 122334",
+        "item number is 1 2 2 3 3 4"
+      ]
+    },
+
+    "card_number": {
+      "includes": [
+        "7777333388881111",
+        "seven seven seven seven three three three three eight eight eight eight one one one one"
+      ]
+    },
+
+    "exp_date": {
+      "includes": [
+        "march 2025",
+        "March two thousand twenty five",
+        "march twenty twenty five"
+      ]
+    },
+
+    "ssn": {
+      "includes": [
+        "my social security number is 1112223333",
+        "1112223333",
+        "one one one two two two three three three three"
+      ]
+    },
+
+    "cvv_num": {
+      "includes": ["001", "zero zero one", "0 0 1"]
+    },
+
+    "zip_code": {
+      "includes": ["90210", "nine zero two one zero", "9 0 2 1 0"]
+    },
+    "order_delivery": {
+      "includes": [
+        "could you please tell me when I should expect the jacket to arrive",
+        "when I should expect the jacket to arrive",
+        "expect the jacket to arrive"
+      ]
+    },
+    "okay": {
+      "includes": ["alright", "okay"]
+    },
+    "address": {
+      "includes": [
+        "my address is 100 Washington Ave New York NY 10006",
+        "one hundres Washington Ave New York NY 10006",
+        "100 Washington Ave, New York NY 10006",
+        "100 Washington Avenue New York NY 10006",
+        "100 Washington Avenue"
+      ]
+    },
+    "app_pay_fee": {
+      "includes": [
+        "I'd rather pay though the application",
+        "pay though the application"
+      ]
+    },
+    "great": {
+      "includes": [
+        "awesome",
+        "wonderful",
+        "wonderful thank you so much",
+        "great",
+        "fantastic",
+        "great thank you so much thanks for your help",
+        "thanks for your help",
+        "I appreciate all your help",
+        "have a great day",
+        "thank you very much"
+      ]
+    }
+  },
+
+  "entities": {
+    "month": {
+      "open_set": false,
+      "values": [
+        {
+          "value": "January"
+        },
+        {
+          "value": "February"
+        },
+        {
+          "value": "March"
+        },
+        {
+          "value": "April"
+        },
+        {
+          "value": "May"
+        },
+        {
+          "value": "June"
+        },
+        {
+          "value": "July"
+        },
+        {
+          "value": "August"
+        },
+        {
+          "value": "September"
+        },
+        {
+          "value": "October"
+        },
+        {
+          "value": "November"
+        },
+        {
+          "value": "December"
+        }
+      ]
+    },
+    "city": {
+      "open_set": true,
+      "values": [
+        {
+          "value": "New York city",
+          "synonyms": ["NYC"]
+        },
+        {
+          "value": "Miami"
+        },
+        {
+          "value": "Orlando"
+        },
+        {
+          "value": "Georgetown"
+        },
+        {
+          "value": "Washington DC",
+          "synonyms": ["DC"]
+        },
+        {
+          "value": "DC"
+        },
+        {
+          "value": "Seattle"
+        },
+        {
+          "value": "Phoenix"
+        },
+        {
+          "value": "Philadelphia"
+        },
+        {
+          "value": "Houston"
+        },
+        {
+          "value": "Chicago"
+        },
+        {
+          "value": "LA",
+          "synonyms": ["Los Angeles"]
+        },
+        {
+          "value": "Las Vegas"
+        },
+        {
+          "value": "Dallas"
+        },
+        {
+          "value": "Oklahoma City"
+        },
+        {
+          "value": "San Diego"
+        },
+        {
+          "value": "San Antonio"
+        }
+      ]
+    },
+    "address": {
+      "open_set": false,
+      "values": [
+        {
+          "value": "South Street",
+          "synonyms": ["South st"]
+        },
+        {
+          "value": "Main Street",
+          "synonyms": ["Main st"]
+        },
+        {
+          "value": "Washington Avenue",
+          "synonyms": ["Washington ave"]
+        },
+        {
+          "value": "Tall Street",
+          "synonyms": ["Tall St"]
+        },
+        {
+          "value": "California Street",
+          "synonyms": ["CA Street"]
+        }
+      ]
+    },
+
+    "name": {
+      "open_set": true,
+      "values": [
+        {
+          "value": "Doctor Smith",
+          "synonyms": ["Doc Smith", "Doctor Smith", "Smith, M.D.", "Smith MD"]
+        },
+        {
+          "value": "Doctor Philips",
+          "synonyms": [
+            "Doc Philips",
+            "Doctor Philips",
+            "Philips, M.D.",
+            "Philips MD"
+          ]
+        },
+        {
+          "value": "Jim Smith",
+          "synonyms": ["Jim Smith"]
+        },
+        {
+          "value": "Tony Montana",
+          "synonyms": ["Tony Montana"]
+        },
+        {
+          "value": "Jill Jones",
+          "synonyms": ["Jill Jones"]
+        }
+      ],
+      "includes": [
+        "My name is (Doctor Smith)[name]",
+        "My name is (Tony Montana)[name]",
+        "My name is (Jill Jones)[name]",
+        "My name is (Jim Smith)[name]",
+        "This is (Doctor Philips)[name]",
+        "This is (Jill Jones)[name]",
+        "This is (Doctor Smith)[name]",
+        "This is (Jim Smith)[name]",
+        "(Doctor Jones)[name] calling",
+        "(Jim Smith)[name] calling",
+        "(Jill Jones)[name] calling",
+        "(Doctor Philips)[name] calling"
+      ]
+    },
+
+    "email": {
+      "open_set": true,
+      "values": [
+        {
+          "value": "husband at gmail dot com",
+          "synonyms": ["husband@gmail.com"]
+        },
+        {
+          "value": "luna at yahoo dot com",
+          "synonyms": ["luna@yahoo.com"]
+        },
+        {
+          "value": "abcd at bing dot com",
+          "synonyms": ["abcd@bing.com"]
+        },
+        {
+          "value": "email dash mine at gmail dot com",
+          "synonyms": ["email-mine@gmail.com"]
+        }
+      ],
+      "includes": [
+        "email is (husband@gmail.com)[email]",
+        "(dog dash cat at gmail dot com)[email]",
+        "The email is (cat at gmail dot com)[email]"
+      ]
+    },
+
+    "car_make": {
+      "open_set": true,
+      "values": [
+        {
+          "value": "Toyota"
+        },
+        {
+          "value": "Ford"
+        },
+        {
+          "value": "Lexus"
+        },
+        {
+          "value": "Honda"
+        }
+      ]
+    },
+
+    "damage_car": {
+      "open_set": true,
+      "values": [
+        {
+          "value": "damage to the front bumper"
+        },
+        {
+          "value": "hood got crashed"
+        },
+        {
+          "value": "left side of the front window is crashed"
+        },
+        {
+          "value": "both front wheels are broken"
+        }
+      ]
+    },
+
+    "phone_num": {
+      "open_set": true,
+      "values": [
+        {
+          "value": "646-111-3333"
+        },
+        {
+          "value": "6461113333"
+        },
+        {
+          "value": "six four six one one one three three three three"
+        }
+      ]
+    }
+  }
+}

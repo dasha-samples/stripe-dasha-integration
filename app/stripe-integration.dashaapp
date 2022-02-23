@@ -1,0 +1,25 @@
+{
+  "formatVersion": "2",
+  "dialogue": {
+    "file": "main.dsl"
+  },
+  "nlu": {
+    "language": "en-US",
+    "skills": [
+      "sentiment",
+      "common_phrases",
+      "common-numbers",
+      "address_eng",
+      "date-and-time"
+    ],
+    "customIntents": {
+      "file": "intents.json"
+    }
+  },
+  "nlg": {
+    "type": "phrases",
+    "file": "phrasemap.json",
+    "signatureFile": "phrasemap.json"
+  },
+  "name": "stripe-integration-demo"
+}

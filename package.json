@@ -1,0 +1,26 @@
+{
+  "name": "customer-feedback-survey",
+  "version": "0.1.0",
+  "license": "MIT",
+  "main": "index.js",
+  "title": "Customer Feedback Survey",
+  "description": "A simple Dasha app for collecting customer feedback integrated with stripe",
+  "scripts": {
+    "start": "node index.js --no-warnings"
+  },
+  "devDependencies": {
+    "@dasha.ai/cli": ">=0.1.0",
+    "prettier": "^2.2.1"
+  },
+  "dependencies": {
+    "@dasha.ai/sdk": "^0.8.0",
+    "axios": "^0.26.0",
+    "dotenv": "^16.0.0",
+    "express": "^4.17.2",
+    "http": "^0.0.1-security",
+    "lodash": "^4.17.21",
+    "moment": "^2.29.1",
+    "stripe": "^8.203.0",
+    "uuid": "^8.3.2"
+  }
+}

@@ -1,0 +1,186 @@
+{
+  "default": {
+    "voiceInfo": {
+      "lang": "en-US",
+      "speaker": "default",
+      "speed": 1
+    },
+
+    "phrases": {
+      "greeting": {
+        "first": [
+          { "text": "Hi " },
+          { "id": "name", "type": "dynamic" },
+          {
+            "text": " this is Dasha with Acme Credit Union. You visited one of our offices earlier today. I'd like to ask you a few questions about the experience. Do you have two minutes now? "
+          }
+        ],
+        "repeat": [
+          { "text": "I was just saying, do you have two minutes to answer a few questions " },
+          { "id": "name", "type": "dynamic" },
+          { "text": "? This will help ACME serve you better." }
+        ]
+      },
+
+      "question_1": {
+        "first": [
+          {
+            "text": "Perfect, thank you. First question. How would you rate the bank employees with whom you interacted? Please use the scale of 1 to 5."
+          }
+        ],
+        "repeat": [
+          {
+            "text": "I was saying. How would you rate the bank employees with whom you interacted. Please rate as 1 to 5."
+          }
+        ]
+      },
+
+      "i_will_call_back": [{ "text": "Okay, I'll call you later. Bye!" }],
+      "hello": {
+        "random": [[{ "text": "Hello" }], [{ "text": "Umm, hello?" }], [{ "text": "Are you there?" }]]
+      },
+
+      "when_callback": [{ "text": "When can I call you back?" }],
+      "i_will_wait": {
+        "random": [[{ "text": "Okay, I'll wait" }], [{ "text": "Sure, I'll wait" }], [{ "text": "Okay, no problem!" }]]
+      },
+
+      "question_1_n": {
+        "first": [
+          { "text": "I'm sorry to hear your experience was less than optimal. What could have been done better?" }
+        ],
+        "repeat": [{ "text": "I was saying. What about the experience could have gone better?" }]
+      },
+
+      "question_2": {
+        "first": [
+          {
+            "text": "Thank you. Next question. On a scale of 1 to 5; how did you feel about the effectiveness of the anti COVID measures at the bank location?"
+          }
+        ],
+        "repeat": [{ "text": "I was saying. How would you rate our anti covid measures. On a scale of 1 to 5." }]
+      },
+
+      "question_2_n": {
+        "first": [
+          {
+            "text": "So sorry to hear that you thought our measures are not sufficient. What do you think can be done better?"
+          }
+        ],
+        "repeat": [
+          { "text": "I was saying. What do you feel could have been done better in terms of anti covid measures?" }
+        ]
+      },
+
+      "question_3": {
+        "first": [
+          { "text": "Thank you. And final question, how would you rate the overall experience, on a scale of 1 to 5?" }
+        ],
+        "repeat": [{ "text": "I was saying. On a scale of 1 to 5, how would you rate your overall experience?" }]
+      },
+
+      "question_3_n": {
+        "first": [
+          {
+            "text": "I am so sorry to hear that you did not enjoy the experience. Can you please tell me what you feel could have been done better? "
+          }
+        ],
+        "repeat": [{ "text": "I was saying. What can we have done better to make your experience more pleasant?" }]
+      },
+
+      "question_3_p": {
+        "first": [
+          {
+            "text": "Thank you for such a high rating of your experience. Can you please share what especially stood out?"
+          }
+        ],
+        "repeat": [{ "text": "I was saying. What stood out to you in making your experience this pleasant?" }]
+      },
+
+      "final_q": {
+        "first": [{ "text": "Thank you so much. Anything else we should make note of?" }],
+        "repeat": [{ "text": "I was saying. Anything else we should make note of?" }]
+      },
+
+      "final_bye": {
+        "first": [
+          {
+            "text": "Thank you so much for your time and for remaining a loyal ACME customer! Your feedback will help us serve you better. Bye!   "
+          }
+        ],
+        "repeat": [{ "text": "I was saying. Anything else we should make note of?" }]
+      },
+
+      "transition": {
+        "first": [{ "text": "I'm so sorry you were unsatisfied. I will be sure to mark your feedback as escalated." }],
+        "repeat": [{ "text": "I was saying. What stood out to you in making your experience this pleasant?" }]
+      },
+
+      "i_can_hear_you": [{ "text": "Yes, I hear you" }],
+      "dont_understand": {
+        "random": [
+          [{ "text": "Sorry, could you say it again?" }],
+          [
+            {
+              "text": "Sorry, the connection dropped for a second. Could you say that again?"
+            }
+          ],
+          [{ "text": "Sorry, I didn't quite catch that." }],
+          [{ "text": "Could you say it one more time?" }]
+        ]
+      },
+      "dont_understand_hangup": [
+        {
+          "text": "I'm sorry I can barely hear you. I'll try to call you later! Bye!"
+        }
+      ],
+      "dont_understand_forward": [
+        {
+          "text": "I'm sorry, let me transfer you to another agent. Please stand by!"
+        }
+      ],
+      "mhm": [{ "text": "Mgm..." }],
+      "yes_i_am_a_robot": [
+        {
+          "text": "Actually I am an advanced AI. Just don't tell my boss or I'll be out of a job."
+        }
+      ],
+      "is_that_all": [{ "text": "Is that all?" }],
+      "repeat_question": [{ "text": "Can you repeat the question, please?" }]
+    },
+
+    "types": {},
+    "macros": {
+      "question_1": {},
+      "transition": {},
+      "question_1_n": {},
+      "question_2": {},
+      "question_2_n": {},
+      "question_3": {},
+      "question_3_n": {},
+      "question_3_p": {},
+      "final_q": {},
+      "final_bye": {},
+      "i_will_call_back": {},
+      "see_you_soon": {},
+      "hello": {},
+      "when_callback": {},
+      "i_said": {},
+      "sorry_wont_call": {},
+      "i_will_wait": {},
+      "i_can_hear_you": {},
+      "dont_understand": {},
+      "dont_understand_hangup": {},
+      "dont_understand_forward": {},
+      "mhm": {},
+      "yes_i_am_a_robot": {},
+      "is_that_all": {},
+      "greeting": {},
+      "name": {},
+      "will_help": {},
+      "how_much": {},
+      "confirm_food_order": {},
+      "repeat_question": {}
+    }
+  }
+}
