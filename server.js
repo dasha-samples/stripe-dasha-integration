@@ -159,7 +159,7 @@ function createApp() {
       return res.status(400).json({ statusCode: 400, message: e.message });
     }
   });
-  app.post("api/finalize_conversation/:conversation_id", async (req, res) => {
+  app.post("/api/finalize_conversation/:conversation_id", async (req, res) => {
     const conversation_id = req.params.conversation_id;
     console.log(`Finalizing conversation ${conversation_id}...`);
     const payment_id = get_payment_intent(conversation_id);

@@ -193,6 +193,7 @@ node ask_card_number
     do
     {
         #sayText("Ok. Now, let's get your card details. Could you tell me your card number please?");
+        #setVadPauseLength(2);
         wait*;
     }
     transitions
