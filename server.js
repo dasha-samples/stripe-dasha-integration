@@ -149,7 +149,7 @@ function createApp() {
         { payment_method: paymentMethod.id }
       );
       const success =
-        paymentIntent.charges.data.slice(-1)[0].status === "succeeded";
+        paymentIntent.charges.data.slice(-1)[0]?.status === "succeeded";
 
       console.log(`Confirmation finished, success: ${success}.`);
       if (success) console.log("Payment accepted");
@@ -165,11 +165,13 @@ function createApp() {
     const payment_id = get_payment_intent(conversation_id);
     if (payment_id) {
       const existing_payment = await stripe.paymentIntents.retrieve(payment_id);
-      if (existing_payment.charges.data.slice(-1)[0].status !== "succeeded") {
+      if (existing_payment.charges.data.slice(-1)[0]?.status !== "succeeded") {
         console.log(`Cancelling payment ${conversation_id}...`);
         await stripe.paymentIntents.cancel(payment_id);
+        console.log("Canceled payment intent");
       }
       delete_conversation_info(conversation_id);
+      console.log("Deleted conversation info")
     }
 
     res.sendStatus(200);

@@ -6,9 +6,12 @@ context
     // declare input variables here
     input phone: string;
 
+    // number of attempts to ask each question again
+    num_attempts: number = 2;
+
     card_number: string?;
     card_exp_date: ExpDate?;
-    card_cvc_code: number?;
+    card_cvc_code: string?;
     
     output chosen_product_info: ProductInfo?;
     output shipping_info: ShippingInfo?;
@@ -17,13 +20,13 @@ context
 }
 
 // declare external functions here
-external function get_product(product_id: string?): ProductInfo;
+external function get_product(numberwords: unknown[]): ProductInfo;
 external function get_shipping_info(address_data: unknown): ShippingInfo;
 external function init_payment(amount: number): boolean;
-external function parse_card_number(numberwords: unknown[]): string;
+external function parse_card_number(numberwords: unknown[], raw: string): string;
 external function parse_exp_date(user_input: string): ExpDate;
-external function parse_cvc_code(numberwords: unknown[]): string;
-external function confirm_payment(card_number: string?,card_exp_date: ExpDate?,card_cvc_code: number?): boolean;
+external function parse_cvc_code(numberwords: unknown[], raw: string): string;
+external function confirm_payment(card_number: string?,card_exp_date: ExpDate?,card_cvc_code: string?): boolean;
 
 external function throw_error(msg: string): empty;
 
@@ -65,9 +68,7 @@ node product_number
     do
     {
         #sayText("Alright, let me check.");
-        var parsed_product_id = #messageGetData("numberword")[0]?.value;
-        #log(parsed_product_id);
-        set $chosen_product_info = external get_product(parsed_product_id);
+        set $chosen_product_info = external get_product(#messageGetData("numberword"));
         #log($chosen_product_info);
         if ($chosen_product_info is null)
         {
@@ -84,8 +85,8 @@ node product_number
     transitions
     {
         ask_address: goto ask_address on #messageHasIntent("yes");
-        no: goto invalid_product on #messageHasIntent("no") and #getVisitCount("product_number") < 2;
-        sorry_bye: goto sorry_bye on #messageHasIntent("no") and #getVisitCount("product_number") >= 2;
+        no: goto invalid_product on #messageHasIntent("no") and #getVisitCount("product_number") < $num_attempts;
+        sorry_bye: goto sorry_bye on #messageHasIntent("no") and #getVisitCount("product_number") >= $num_attempts;
     }
 }
 
@@ -124,8 +125,8 @@ node validate_address
     transitions
     {
         validate_price: goto validate_price on #messageHasIntent("yes");
-        invalid_address: goto invalid_address on #messageHasIntent("no") and #getVisitCount("validate_address") < 2;
-        sorry_bye: goto sorry_bye on #messageHasIntent("no") and #getVisitCount("validate_address") >= 2;
+        invalid_address: goto invalid_address on #messageHasIntent("no") and #getVisitCount("validate_address") < $num_attempts;
+        sorry_bye: goto sorry_bye on #messageHasIntent("no") and #getVisitCount("validate_address") >= $num_attempts;
     }
 }
 
@@ -151,11 +152,11 @@ node validate_price
             set cents = ($shipping_info.taxes % 100).toString();
             #sayText("The taxes are " + dollars + " dollars and " + cents + " cents.");
             
-            #sayText(" And... one moment...");
             set $total_cost = $chosen_product_info.price + $shipping_info.price + $shipping_info.taxes;
             set dollars = ($total_cost / 100).trunc().toString();
             set cents = ($total_cost % 100).toString();
-            #sayText("The total cost would be " + dollars + " dollars and " + cents + " cents.");
+            //one moment... 
+            #sayText("And... The total cost would be " + dollars + " dollars and " + cents + " cents.");
             #sayText("Would you like to proceed with your purchase?");
         }
         wait *;
@@ -177,7 +178,7 @@ node init_payment
         } 
         else {
             #sayText("Something went wrong. Probably, some problems on our server.");
-            #sayText("Sorry. Have a nice day!");
+            #sayText("Sorry for the technical issues. Have a nice day!");
             exit;
         }
         
@@ -192,13 +193,14 @@ node ask_card_number
 {
     do
     {
-        #sayText("Ok. Now, let's get your card details. Could you tell me your card number please?");
         #setVadPauseLength(2);
+        if (#getVisitCount("ask_card_number") == 1)
+            #sayText("Ok. Now, let's get your card details. Could you tell me your card number please?");
         wait*;
     }
     transitions
     {
-        validate_card_number: goto validate_card_number on #messageHasData("numberword");
+        validate_card_number: goto validate_card_number on true;
     }
 }
 
@@ -206,11 +208,12 @@ node validate_card_number
 {
     do
     {
-        set $card_number = external parse_card_number(#messageGetData("numberword"));
+        set $card_number = external parse_card_number(#messageGetData("numberword"), #getMessageText());
         #log($card_number);
         if ($card_number is null)
         {
-            external throw_error("No handler for invalid card number");
+            #sayText("I'm sorry, I didn't quite catch that. Could you say it again?");
+            goto ask_again;
         }
         else
         {
@@ -221,9 +224,10 @@ node validate_card_number
     }
     transitions
     {
+        ask_again: goto ask_card_number;
         ask_exp_date: goto ask_exp_date on #messageHasIntent("yes");
-        invalid_card_number: goto invalid_card_number on #messageHasIntent("no") and #getVisitCount("validate_card_number") < 2;
-        sorry_bye: goto sorry_bye on #messageHasIntent("no") and #getVisitCount("validate_card_number") >= 2;
+        invalid_card_number: goto invalid_card_number on #messageHasIntent("no") and #getVisitCount("validate_card_number") < $num_attempts;
+        sorry_bye: goto sorry_bye on #messageHasIntent("no") and #getVisitCount("validate_card_number") >= $num_attempts;
     }
 }
 
@@ -231,7 +235,8 @@ node ask_exp_date
 {
     do
     {
-        #sayText("Okay, thank you. Now, could you tell me the expiration date?");
+        if (#getVisitCount("ask_exp_date") == 1)
+            #sayText("Okay, thank you. Now, could you tell me the expiration date?");
         wait*;
     }
     transitions
@@ -250,7 +255,8 @@ node validate_exp_date
         #log($card_exp_date);
         if ($card_exp_date is null)
         {
-            external throw_error("No handler for invalid card exp date");
+            #sayText("I'm sorry, I didn't quite catch that. Could you say it again?");
+            goto ask_again;
         }
         else {
             #sayText($card_exp_date.exp_month_str + " " + $card_exp_date.exp_year.toString());
@@ -260,9 +266,10 @@ node validate_exp_date
     }
     transitions
     {
+        ask_again: goto ask_exp_date;
         ask_cvc_code: goto ask_cvc_code on #messageHasIntent("yes");
-        invalid_exp_date: goto invalid_exp_date on #messageHasIntent("no")  and #getVisitCount("validate_exp_date") < 2;
-        sorry_bye: goto sorry_bye on #messageHasIntent("no") and #getVisitCount("validate_exp_date") >= 2;
+        invalid_exp_date: goto invalid_exp_date on #messageHasIntent("no")  and #getVisitCount("validate_exp_date") < $num_attempts;
+        sorry_bye: goto sorry_bye on #messageHasIntent("no") and #getVisitCount("validate_exp_date") >= $num_attempts;
     }
 }
 
@@ -270,7 +277,8 @@ node ask_cvc_code
 {
     do
     {
-        #sayText("Great, got it. And the three digit code on the back of the card?");
+        if (#getVisitCount("ask_cvc_code") == 1)
+            #sayText("Great, got it. And the three digit code on the back of the card?");
         wait*;
     }
     transitions
@@ -283,18 +291,20 @@ node validate_cvc_code
 {
     do
     {
-        var parsed_cvc = external parse_cvc_code(#messageGetData("numberword"));
-        set $card_cvc_code = parsed_cvc.parseNumber();
+        var parsed_cvc = external parse_cvc_code(#messageGetData("numberword"), #getMessageText());
+        set $card_cvc_code = parsed_cvc;//.parseNumber();
         #log($card_cvc_code);
         if (parsed_cvc is null)
         {
-            external throw_error("No handler for invalid cvc code");
+            #sayText("I'm sorry, I didn't quite catch that. Could you say it again?");
+            goto ask_again;
         }
         #sayText("Thanks for that.");
         goto ask_charge;
     }
     transitions
     {
+        ask_again: goto ask_cvc_code;
         ask_charge: goto ask_charge;
     }
 }

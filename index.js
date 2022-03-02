@@ -42,8 +42,8 @@ async function main() {
     console.log(args);
   });
 
-  app.setExternal("get_product", async (args, conv) => {
-    const product_id = args.product_id;
+  app.setExternal("get_product", async (argv, conv) => {
+    const product_id = join_numberwords(argv.numberwords);
     const response = await axios.get(
       `${SERVER_URL}/api/product_info/${product_id}`
     );
@@ -87,7 +87,10 @@ async function main() {
   });
 
   app.setExternal("parse_card_number", (argv, conv) => {
-    const card_number = join_numberwords(argv.numberwords);
+    let card_number = join_numberwords(argv.numberwords);
+    if (card_number.length == 16) return card_number;
+    const num_re = /\d+/g
+    card_number = argv.raw.match(num_re).join("");
     return card_number.length == 16 ? card_number : null;
   });
   app.setExternal("parse_exp_date", (argv, conv) => {
@@ -101,7 +104,10 @@ async function main() {
     return exp_date;
   });
   app.setExternal("parse_cvc_code", (argv, conv) => {
-    const cvc = join_numberwords(argv.numberwords);
+    let cvc = join_numberwords(argv.numberwords);
+    if (cvc.length == 3) return cvc;
+    const num_re = /\d+/g;
+    cvc = argv.raw.match(num_re).join("");
     return cvc.length == 3 ? cvc : null;
   });
   app.setExternal("confirm_payment", async (argv, conv) => {
