@@ -59,11 +59,11 @@ digression payment_phone
     }
     transitions
     {
-        product_number: goto product_number on #messageHasData("numberword");
+        product_number: goto validate_product_number on #messageHasData("numberword");
     }
 }
 
-node product_number
+node validate_product_number
 {
     do
     {
@@ -72,7 +72,10 @@ node product_number
         #log($chosen_product_info);
         if ($chosen_product_info is null)
         {
-            external throw_error("Unexpected error: chosen_product_info is null");
+            #sayText("I'm sorry, I could not find this item number.");
+            if (#getVisitCount("validate_product_number") >= $num_attempts + 1)
+                goto force_sorry_bye;
+            #sayText("Could you say it one more time, please?");
         }
         else
         {
@@ -84,9 +87,14 @@ node product_number
     }
     transitions
     {
-        ask_address: goto ask_address on #messageHasIntent("yes");
-        no: goto invalid_product on #messageHasIntent("no") and #getVisitCount("product_number") < $num_attempts;
-        sorry_bye: goto sorry_bye on #messageHasIntent("no") and #getVisitCount("product_number") >= $num_attempts;
+        ask_address: goto ask_address on #messageHasIntent("yes") priority 1;
+        repeat_item_number: goto validate_product_number on $chosen_product_info is null 
+                                                            and #messageHasData("numberword") 
+                                                            and #getVisitCount("validate_product_number") < $num_attempts priority 1;
+        
+        no: goto invalid_product on #messageHasIntent("no") and #getVisitCount("validate_product_number") < $num_attempts;
+        sorry_bye: goto sorry_bye on #messageHasIntent("no") and #getVisitCount("validate_product_number") >= $num_attempts;
+        force_sorry_bye: goto sorry_bye;
     }
 }
 
@@ -217,7 +225,10 @@ node validate_card_number
         }
         else
         {
-            #sayText($card_number.slice(0,4) + ", " + $card_number.slice(4,8) + ", " + $card_number.slice(8,12) + ", " + $card_number.slice(12,16));
+            #sayText($card_number.slice(0,4).split("").join(" ") + ", " + 
+                    $card_number.slice(4,8).split("").join(" ") + ", " + 
+                    $card_number.slice(8,12).split("").join(" ") + ", " + 
+                    $card_number.slice(12,16).split("").join(" "));
             #sayText("Is that correct?");
         }
         wait*;
@@ -292,7 +303,7 @@ node validate_cvc_code
     do
     {
         var parsed_cvc = external parse_cvc_code(#messageGetData("numberword"), #getMessageText());
-        set $card_cvc_code = parsed_cvc;//.parseNumber();
+        set $card_cvc_code = parsed_cvc;
         #log($card_cvc_code);
         if (parsed_cvc is null)
         {
@@ -429,7 +440,7 @@ node invalid_product
     }
     transitions
     {
-        repeat_product_number: goto product_number on #messageHasData("numberword");
+        repeat_product_number: goto validate_product_number on #messageHasData("numberword");
     }
 }
 

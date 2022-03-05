@@ -4,7 +4,6 @@ const _ = require("lodash");
 const axios = require("axios");
 const http = require("http");
 const { Stripe } = require("stripe");
-// const stripe = require("stripe")
 
 const PORT = process.env.PORT ?? "8080";
 let stripe;
@@ -15,15 +14,14 @@ const transaction_storage = {};
 function save_payment_intent(conversation_id, payment_intent_id) {
   if (transaction_storage[conversation_id] === undefined)
     transaction_storage[conversation_id] = {};
-  transaction_storage[conversation_id]["payment_intent_cs"] = payment_intent_id;
+  transaction_storage[conversation_id]["payment_intent_id"] = payment_intent_id;
 }
-function get_payment_intent(conversation_id) {
-  if (transaction_storage[conversation_id] === undefined)
-    throw new Error(`Conversation ${conversation_id} not found`);
-  return transaction_storage[conversation_id]["payment_intent_cs"];
+function get_conversation_info(conversation_id) {
+  return transaction_storage[conversation_id];
 }
 function delete_conversation_info(conversation_id) {
-  delete transaction_storage[conversation_id];
+  if (get_conversation_info(conversation_id) !== undefined)
+    delete transaction_storage[conversation_id];
 }
 
 function checkEnvironment(req, res, next) {
@@ -77,18 +75,24 @@ function createApp() {
       const products = await stripe.products.list({
         ids: [product_id],
       });
-      if (products.data.length == 0)
+      if (products.data.length == 0) {
+        console.log("Could not find product");
         return res.status(404).send(`Product '${product_id}' not found`);
+      }
+      console.log("Found product");
 
       const description = products.data[0].description;
 
       const prices = await stripe.prices.list({
         product: product_id,
       });
-      if (products.data.length == 0)
+      if (products.data.length == 0) {
+        console.log("Could not find price for product");
         return res
           .status(404)
           .send(`Prices for product '${product_id}' not found`);
+      }
+      console.log("Found price");
 
       const price = prices.data[0].unit_amount;
 
@@ -136,7 +140,9 @@ function createApp() {
     console.log(`Confirming payment for conversation ${conversation_id}...`);
     const { card } = req.body;
     try {
-      const payment_intent_id = get_payment_intent(conversation_id);
+      const payment_intent_id = get_conversation_info(conversation_id)?.payment_intent_id;
+      if (payment_intent_id === undefined)
+        throw new Error(`Conversation ${conversation_id} not found`);
       console.log(`Loaded client secret`);
       const paymentMethod = await stripe.paymentMethods.create({
         type: "card",
@@ -162,9 +168,9 @@ function createApp() {
   app.post("/api/finalize_conversation/:conversation_id", async (req, res) => {
     const conversation_id = req.params.conversation_id;
     console.log(`Finalizing conversation ${conversation_id}...`);
-    const payment_id = get_payment_intent(conversation_id);
-    if (payment_id) {
-      const existing_payment = await stripe.paymentIntents.retrieve(payment_id);
+    const conversation_info = get_conversation_info(conversation_id);    
+    if (conversation_info !== undefined) {
+      const existing_payment = await stripe.paymentIntents.retrieve(conversation_info.payment_intent_id);
       if (existing_payment.charges.data.slice(-1)[0]?.status !== "succeeded") {
         console.log(`Cancelling payment ${conversation_id}...`);
         await stripe.paymentIntents.cancel(payment_id);
