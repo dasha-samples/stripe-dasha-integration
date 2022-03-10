@@ -3,7 +3,6 @@ context
 {
     output status:string?;
     output serviceStatus:string?;
-    du_text: string?;
 }
 
 digression dont_understand_hangup_params
@@ -29,10 +28,6 @@ digression dont_understand
     var responses: Phrases[] = ["dont_understand"];
     do
     {
-        set $du_text = #getMessageText();
-        //#log("entering dont_understand digression");
-        //#log($du_text);
-
         if (digression.dont_understand.counter > digression.dont_understand.retriesLimit)
         {
             goto hangup;
@@ -81,7 +76,6 @@ node dont_understand_hangup
         set $serviceStatus=digression.dont_understand_hangup_params.serviceStatus;
 
         //#forward("12223334455");    //use if you want to transfer a call
-        #disconnect();
         exit;
     }
     transitions

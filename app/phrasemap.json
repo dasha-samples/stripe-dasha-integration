@@ -2,8 +2,8 @@
   "default": {
     "voiceInfo": {
       "lang": "en-US",
-      "speaker": "default",
-      "speed": 1
+      "speaker": "Kate",
+      "speed": 0.9
     },
 
     "phrases": {

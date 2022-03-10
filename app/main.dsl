@@ -39,6 +39,7 @@ start node root
         #connectSafe($phone); // connecting to the phone number which is specified in index.js that it can also be in-terminal text chat
         #waitForSpeech(1000); // give the person a second to start speaking
         #sayText("Hi there. Dasha on the line, how may I help you today?");
+        #setVadPauseLength(1.1);
         wait *; // wait for a response
     }
 }
@@ -48,8 +49,6 @@ digression payment_phone
     conditions
     {
         on #messageHasIntent("payment_phone");
-        // TODO remove this mock
-        on true && #getVisitCount("payment_phone") == 0;
     }
     do
     {
@@ -73,8 +72,9 @@ node validate_product_number
         if ($chosen_product_info is null)
         {
             #sayText("I'm sorry, I could not find this item number.");
-            if (#getVisitCount("validate_product_number") >= $num_attempts + 1)
+            if (#getVisitCount("validate_product_number") >= $num_attempts + 1) {
                 goto force_sorry_bye;
+            }
             #sayText("Could you say it one more time, please?");
         }
         else
@@ -294,7 +294,7 @@ node ask_cvc_code
     }
     transitions
     {
-        validate_cvc_code: goto validate_cvc_code on #messageHasData("numberword");
+        validate_cvc_code: goto validate_cvc_code on true; //#messageHasData("numberword")
     }
 }
 
