@@ -57,6 +57,8 @@ async function main() {
       `${SERVER_URL}/api/finalize_conversation/${CONVERSATION_ID}`,
       {}
     );
+    await app.stop();
+    app.dispose();
   }
 }
 
@@ -169,7 +171,6 @@ const app_external_functions = {
         }
       )
       .then((res) => {
-        console.log("No error");
         ret = res.data.success;
       })
       .catch((error) => {

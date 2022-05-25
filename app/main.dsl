@@ -343,7 +343,7 @@ node charge
     {
         #sayText("Give me one second...");
         set $payment_success = external confirm_payment($card_number, $card_exp_date, $card_cvc_code);
-        if (!$payment_success)
+        if ($payment_success != true)
         {
             set $chosen_product_info = null;
             set $shipping_info = null;

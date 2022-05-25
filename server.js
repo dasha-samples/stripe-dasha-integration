@@ -173,7 +173,7 @@ function createApp() {
       const existing_payment = await stripe.paymentIntents.retrieve(conversation_info.payment_intent_id);
       if (existing_payment.charges.data.slice(-1)[0]?.status !== "succeeded") {
         console.log(`Cancelling payment ${conversation_id}...`);
-        await stripe.paymentIntents.cancel(payment_id);
+        await stripe.paymentIntents.cancel(conversation_info.payment_intent_id);
         console.log("Canceled payment intent");
       }
       delete_conversation_info(conversation_id);
